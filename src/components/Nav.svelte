@@ -33,7 +33,7 @@
 		{#if $session.user_level === level.no_access || segment === undefined }
 			<li><a aria-current="page" href="/">login</a></li>
 		{:else}
-			<li><a aria-current="{segment === 'guest' ? 'page' : 'false'}" href="guest">home</a></li>
+			<li><a aria-current="{segment === 'guest' ? 'page' : undefined}" href="guest">home</a></li>
 			{#if $session.user_level >= level.admin_access}
 				<li><a aria-current="{segment === 'admin' ? 'page' : undefined}" href="admin">admin</a></li>
 			{/if}

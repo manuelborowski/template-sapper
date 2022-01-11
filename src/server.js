@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import {init as user_init} from './model/User.js';
 import { url_path_to_level, level as access_level } from 'lib/user_access_levels';
+import  nocache  from 'nocache';
 
 const {PORT, NODE_ENV} = process.env;
 const dev = NODE_ENV === 'development';
@@ -20,6 +21,7 @@ dotenv.config();
 const app = express();
 app.use(
   body_parser.json(),
+  nocache(),
   session({
     secret: process.env.SESSION_SECRET,
     resave: true,

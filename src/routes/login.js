@@ -1,4 +1,5 @@
 import { validate_user } from '../model/User.js';
+import { level as access_level } from 'lib/user_access_levels';
 
 export async function post(req, res) {
   try {
@@ -21,20 +22,16 @@ export async function post(req, res) {
 export async function get(req, res) {
   try {
     console.log('login via key')
-    const key = req.query["api-key"];
+    const key = req.query["key"];
     //BOROWSKI: it is possible to log in with a key
-    if (key === "admin") {
-      req.session.email = "key-admin";
-      req.session.user_level = 5;
-    } else if (key === "user") {
-      req.session.email = "key-user";
-      req.session.user_level = 1;
+    if (key === process.env.KEY_ADMIN) {
+      req.session.user_level = access_level.admin_access;
+    } else if (key === process.env.KEY_USER) {
+      req.session.user_level = access_level.user_access;
     } else {
-      req.session.user_level = 0;
+      req.session.user_level = access_level.no_access;
     }
-    res.writeHead(301, {Location: "/home"}).end();
-    //
-    // res.end(JSON.stringify({ user_level: req.session.user_level }));
+    res.writeHead(301, {Location: "/guest"}).end();
   } catch (error) {
     res.end(JSON.stringify({ error: error.message }));
   }
