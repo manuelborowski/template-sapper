@@ -24,7 +24,7 @@
       console.log("handleLogin, set user_level to ", parsed.user_level);
       //BOROWSKI: use the session store to save the user level so it can be used elsewhere
       $session.user_level = parsed.user_level;
-      await goto("/home");
+      await goto("/guest");
     }
   };
 </script>

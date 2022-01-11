@@ -8,8 +8,8 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
-
-const { preprocess } = require('./svelte.config');
+import { preprocess } from './svelte.config';
+import alias from '@rollup/plugin-alias';
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
@@ -25,6 +25,11 @@ export default {
 		input: config.client.input(),
 		output: config.client.output(),
 		plugins: [
+			alias({
+				entries: [
+					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') }
+				]
+			}),
 			replace({
 				preventAssignment: true,
 				values:{
@@ -81,6 +86,11 @@ export default {
 		input: config.server.input(),
 		output: config.server.output(),
 		plugins: [
+			alias({
+				entries: [
+					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') }
+				]
+			}),
 			replace({
 				preventAssignment: true,
 				values:{

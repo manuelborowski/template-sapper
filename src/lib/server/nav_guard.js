@@ -1,11 +1,12 @@
-const level_no_access = 0;
-const level_guest_access = 1;
-const level_user_access = 2;
-const level_supervisor_access = 3;
-const level_admin_access = 4;
+import { level } from 'lib/user_access_levels'
 
 //BOROWSKI: prohibit access to a non-authorized endpoint on the SERVER
 export const guard_admin_access = (req) => {
   console.log("server admin access");
-  return req.session.user_level && req.session.user_level === level_admin_access
+  return req.session.user_level && req.session.user_level >= level.admin_access
   };
+
+export const guard_user_access = (req) => {
+  console.log("server user access");
+  return req.session.user_level && req.session.user_level >= level.user_access
+};

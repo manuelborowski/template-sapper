@@ -1,8 +1,3 @@
-const headers = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
-};
-
 export async function post(req, res) {
   try {
     console.log('logout called')

@@ -1,7 +1,7 @@
 <script>
 	import {goto, stores} from '@sapper/app';
 	import fetch from 'cross-fetch';
-	import { level } from '../lib/client/nav_guard.js';
+	import { level } from 'lib/client/nav_guard.js';
 
 	//BOROWSKI: yse the stored user level to hide/display certain entries of the navigation menu.
 	//user level 0 is 'not logged in yet', 1 is 'guest level authorization', ..., 4 is 'admin level authorization'
@@ -30,10 +30,10 @@
 
 <nav>
 	<ul>
-		{#if $session.user_level == level.no_access}
-			<li><a aria-current="{segment === undefined ? 'page' : undefined}" href="/">login</a></li>
+		{#if $session.user_level === level.no_access || segment === undefined }
+			<li><a aria-current="page" href="/">login</a></li>
 		{:else}
-			<li><a aria-current="{segment === 'home' ? 'page' : undefined}" href="home">home</a></li>
+			<li><a aria-current="{segment === 'guest' ? 'page' : 'false'}" href="guest">home</a></li>
 			{#if $session.user_level >= level.admin_access}
 				<li><a aria-current="{segment === 'admin' ? 'page' : undefined}" href="admin">admin</a></li>
 			{/if}
