@@ -1,90 +1,131 @@
 <script>
-  import Menu from './Menu.svelte'
+  import {goto, stores} from '@sapper/app';
+  import fetch from 'cross-fetch';
+  import {level} from 'lib/client/nav_guard.js';
+
+  //BOROWSKI: use the stored user level to hide/display certain entries of the navigation menu.
+  //user level 0 is 'not logged in yet', 1 is 'guest level authorization', ..., 4 is 'admin level authorization'
+  const {session} = stores();
+
+  const handleLogout = async () => {
+    const response = await fetch("/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    const parsed = await response.json();
+    if (parsed.error) {
+      // error = parsed.error;
+    } else {
+      console.log("handleLogout");
+      await goto("/");
+      $session.user_level = 0;
+    }
+  };
 
   export let segment;
   let hamburger_open = false;
+
+  const menu = [
+    {type: 'link', label: 'Home', level: level.guest_access, href: '/guest'},
+    {type: 'sub', label: 'Admin', level: level.admin_access, menu: [
+        {type: 'link', label: 'A1', level: level.guest_access, href: '/admin'},
+      ]},
+    {type: 'sub', label: 'User', level: level.user_access, menu: [
+        {type: 'link', label: 'U1', level: level.guest_access, href: '/user'},
+      ]},
+    {type: 'link', label: 'User', level: level.user_access, href: '/user'},
+  ];
+
+  const main_menu_visible = (force_close = false) => {
+    const main_ul = document.querySelector('.main-menu');
+    if (force_close) {
+      main_ul.classList.add('hidden');
+      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
+    } else {
+      if (main_ul.classList.contains('hidden')) {
+        main_ul.classList.remove('hidden');
+      } else {
+        main_ul.classList.add('hidden');
+      }
+    }
+  }
+
+  const sub_menu_visible = (e) => {
+    console.log(e);
+    const ul = e.target.nextElementSibling;
+    if (ul.classList.contains('hidden')) {
+      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
+      ul.classList.remove('hidden');
+    } else {
+      ul.classList.add('hidden');
+    }
+  }
+
 </script>
 
 
-<div class="flex flex-wrap">
-    <div class="relative mx-auto">
-        <!-- navbar -->
-        <nav class="flex justify-between bg-gray-900 text-white w-screen">
-            <div class="px-5 md:px-12 flex w-full items-center">
-                <a class="text-3xl font-bold font-heading" href={"#"}>
-                    <!-- <img class="h-9" src="logo.png" alt="logo"> -->
-                    Logo Here.
-                </a>
-                <!-- Nav Links -->
-                <ul class="hidden md:flex px-4 mx-auto font-semibold space-x-12">
-                    <Menu {segment}/>
-                </ul>
-
-                <!-- Header Icons -->
-                <div class="hidden md:flex items-center space-x-5 items-center">
-                    <a class="hover:text-gray-200" href={"#/i1"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </a>
-                    <a class="flex items-center hover:text-gray-200" href={"#/i2"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        <span class="flex absolute -mt-5 ml-4">
-                            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                        </span>
-                    </a>
-                    <!-- Sign In / Register      -->
-                    <a class="flex items-center hover:text-gray-200" href={"/"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none"
-                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </a>
-
-
-
-                </div>
-            </div>
-            <!-- Responsive navbar -->
-            <a class="md:hidden flex mr-6 items-center" href={"#"}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none"
-                     viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                <span class="flex absolute -mt-5 ml-4">
-                  <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
-                </span>
-            </a>
-            <div class="md:hidden flex self-center mr-12" on:click={() => {hamburger_open = !hamburger_open;}}>
-                <div class="flex-col flex items-end">
-                    <button class="navbar-burger">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none"
-                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
-
-                    <div class:hidden={!hamburger_open}>
-                        <ul class="flex-col py-4 my-auto font-semibold space-y-4">
-                            <Menu {segment}/>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-        </nav>
-
+<!-- navbar -->
+<nav class="flex  place-content-between items-center px-5 bg-gray-900 text-white w-screen h-full ">
+    <div class="flex self-center mr-12" on:click|stopPropagation={() => {main_menu_visible()}}>
+        <button class="navbar-burger">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:text-gray-200" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
     </div>
+    <div class="py-3">
+        I'm here
+    </div>
+    <a class="text-3xl font-bold pr-4" href={"/"}>
+        <!-- <img class="h-9" src="logo.png" alt="logo"> -->
+        Logo Here.
+    </a>
+</nav>
+
+<div class:hidden={!hamburger_open} class="main-menu relative bg-blue-600 w-fit px-4">
+    <ul class="flex-col my-auto font-semibold space-y-1 text-white">
+
+        {#if $session.user_level === level.no_access || segment === undefined }
+            <li><a href="/">Login</a></li>
+        {:else}
+
+            {#each menu as item}
+                {#if item.type === 'link'}
+                    {#if $session.user_level >= item.level}
+                        <li><a href="{item.href}">{item.label}</a></li>
+                    {/if}
+                {/if}
+                {#if item.type === 'sub'}
+                    <div>
+                    {#if $session.user_level >= item.level}
+                        <li on:click|stopPropagation={(e) => {sub_menu_visible(e)}}>{item.label}</li>
+                    {/if}
+                    <ul class="hidden {item.label} sub-menu ml-10">
+                        {#each item.menu as item}
+                            {#if item.type === 'link'}
+                                {#if $session.user_level >= item.level}
+                                    <li><a href="{item.href}">{item.label}</a></li>
+                                {/if}
+                            {/if}
+                        {/each}
+                    </ul>
+                    </div>
+                {/if}
+            {/each}
+            <li><a href={"#"} on:click={handleLogout}>Logout</a></li>
+        {/if}
+    </ul>
 </div>
 
+<svelte:body on:click={() => {main_menu_visible(true)}}/>
+
+<style>
+    li a:hover {
+        @apply text-gray-200;
+    }
+</style>

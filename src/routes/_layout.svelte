@@ -1,21 +1,17 @@
 <script>
 	import Nav from '../components/Nav.svelte';
 	export let segment;
+	import { version } from './version';
 </script>
 
-<style>
-	main {
-		position: relative;
-		max-width: 56em;
-		background-color: white;
-		padding: 2em;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-</style>
-
+<div class="fixed top-0 h-16">
 <Nav {segment}/>
+</div>
 
-<main>
+<main class="mt-16 bg-white p-8 box-border">
 	<slot></slot>
 </main>
+
+<footer class="bg-gray-300 p-8 box-border">
+	<h1>{@html version}</h1>
+</footer>
