@@ -1,7 +1,7 @@
 <script>
   import {goto, stores} from '@sapper/app';
   import fetch from 'cross-fetch';
-  import {level} from 'lib/client/nav_guard.js';
+  import {level} from 'lib/user_access_levels'
 
   //BOROWSKI: use the stored user level to hide/display certain entries of the navigation menu.
   //user level 0 is 'not logged in yet', 1 is 'guest level authorization', ..., 4 is 'admin level authorization'
@@ -30,13 +30,19 @@
 
   const menu = [
     {type: 'link', label: 'Home', level: level.guest_access, href: '/guest'},
-    {type: 'sub', label: 'Admin', level: level.admin_access, menu: [
+    {
+      type: 'sub', label: 'Admin Maar dan weeral een lange label', level: level.admin_access, menu: [
         {type: 'link', label: 'A1', level: level.guest_access, href: '/admin'},
-      ]},
-    {type: 'sub', label: 'User', level: level.user_access, menu: [
-        {type: 'link', label: 'U1', level: level.guest_access, href: '/user'},
-      ]},
-    {type: 'link', label: 'User', level: level.user_access, href: '/user'},
+        {type: 'link', label: 'A1-maar dan een hele lange label', level: level.guest_access, href: '/admin'},
+        {type: 'link', label: 'Settings', level: level.guest_access, href: '/admin/settings'},
+      ]
+    },
+    {
+      type: 'sub', label: 'User', level: level.user_access, menu: [
+        {type: 'link', label: 'U1', level: level.user_access, href: '/user'},
+        {type: 'link', label: 'settings', level: level.user_access, href: '/user/settings'},
+      ]
+    },
   ];
 
   const main_menu_visible = (force_close = false) => {
@@ -79,15 +85,14 @@
         </button>
     </div>
     <div class="py-3">
-        I'm here
+        Sapper Template
     </div>
     <a class="text-3xl font-bold pr-4" href={"/"}>
-        <!-- <img class="h-9" src="logo.png" alt="logo"> -->
-        Logo Here.
+         <img class="h-9" src="sapper.png" alt="logo">
     </a>
 </nav>
 
-<div class:hidden={!hamburger_open} class="main-menu relative bg-blue-600 w-fit px-4">
+<div class:hidden={!hamburger_open} class="main-menu">
     <ul class="flex-col my-auto font-semibold space-y-1 text-white">
 
         {#if $session.user_level === level.no_access || segment === undefined }
@@ -101,19 +106,21 @@
                     {/if}
                 {/if}
                 {#if item.type === 'sub'}
-                    <div>
-                    {#if $session.user_level >= item.level}
-                        <li on:click|stopPropagation={(e) => {sub_menu_visible(e)}}>{item.label}</li>
-                    {/if}
-                    <ul class="hidden {item.label} sub-menu ml-10">
-                        {#each item.menu as item}
-                            {#if item.type === 'link'}
-                                {#if $session.user_level >= item.level}
-                                    <li><a href="{item.href}">{item.label}</a></li>
-                                {/if}
-                            {/if}
-                        {/each}
-                    </ul>
+                    <div class="relative">
+                        {#if $session.user_level >= item.level}
+                            <li on:click|stopPropagation={(e) => {sub_menu_visible(e)}}>{item.label}</li>
+                            <div class="hidden sub-menu">
+                                <ul class="{item.label} ml-2">
+                                    {#each item.menu as item}
+                                        {#if item.type === 'link'}
+                                            {#if $session.user_level >= item.level}
+                                                <li><a href="{item.href}">{item.label}</a></li>
+                                            {/if}
+                                        {/if}
+                                    {/each}
+                                </ul>
+                            </div>
+                        {/if}
                     </div>
                 {/if}
             {/each}
@@ -125,7 +132,15 @@
 <svelte:body on:click={() => {main_menu_visible(true)}}/>
 
 <style>
-    li a:hover {
+    li:hover {
         @apply text-gray-200;
+    }
+
+    .main-menu {
+        @apply relative bg-blue-600 w-fit px-4 rounded-lg border-2 border-white space-y-2
+    }
+
+    .sub-menu {
+        @apply absolute ml-12 bg-green-700 p-1 pr-4 rounded-lg border-2 border-white top-2 w-max space-y-2
     }
 </style>

@@ -1,14 +1,14 @@
 <script>
 	import Nav from '../components/Nav.svelte';
 	export let segment;
-	import { version } from './version';
+	import { version } from '../version';
 </script>
 
 <div class="fixed top-0 h-16">
 <Nav {segment}/>
 </div>
 
-<main class="mt-16 bg-white p-8 box-border">
+<main class="mt-16 bg-white p-8 box-border min-h-[40rem]">
 	<slot></slot>
 </main>
 
