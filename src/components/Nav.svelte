@@ -7,6 +7,24 @@
   //user level 0 is 'not logged in yet', 1 is 'guest level authorization', ..., 4 is 'admin level authorization'
   const {session} = stores();
 
+  export let segment;
+  let navbar_title;
+  let hamburger_open = false;
+
+  const main_menu_visible = (force_close = false) => {
+    const main_ul = document.querySelector('.main-menu');
+    if (force_close) {
+      main_ul.classList.add('hidden');
+      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
+    } else {
+      if (main_ul.classList.contains('hidden')) {
+        main_ul.classList.remove('hidden');
+      } else {
+        main_ul.classList.add('hidden');
+      }
+    }
+  }
+
   const handleLogout = async () => {
     const response = await fetch("/logout", {
       method: "POST",
@@ -25,15 +43,28 @@
     }
   };
 
-  export let segment;
-  let hamburger_open = false;
+  const sub_menu_visible = (e) => {
+    const ul = e.target.nextElementSibling;
+    if (ul.classList.contains('hidden')) {
+      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
+      ul.classList.remove('hidden');
+    } else {
+      ul.classList.add('hidden');
+    }
+  }
+
+  const update_navbar_title = e => {
+    console.log(e);
+    const pathname = e.target.pathname;
+    navbar_title = pathname in navbar_titles ? navbar_titles[pathname] : pathname;
+  }
 
   const menu = [
     {type: 'link', label: 'Home', level: level.guest_access, href: '/guest'},
     {
-      type: 'sub', label: 'Admin Maar dan weeral een lange label', level: level.admin_access, menu: [
-        {type: 'link', label: 'A1', level: level.guest_access, href: '/admin'},
-        {type: 'link', label: 'A1-maar dan een hele lange label', level: level.guest_access, href: '/admin'},
+      type: 'sub', label: 'Admin', level: level.admin_access, menu: [
+        {type: 'link', label: 'Admin', level: level.guest_access, href: '/admin'},
+        {type: 'link', label: 'Users', level: level.guest_access, href: '/admin/users', title: 'Users'},
         {type: 'link', label: 'Settings', level: level.guest_access, href: '/admin/settings'},
       ]
     },
@@ -45,30 +76,18 @@
     },
   ];
 
-  const main_menu_visible = (force_close = false) => {
-    const main_ul = document.querySelector('.main-menu');
-    if (force_close) {
-      main_ul.classList.add('hidden');
-      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
-    } else {
-      if (main_ul.classList.contains('hidden')) {
-        main_ul.classList.remove('hidden');
-      } else {
-        main_ul.classList.add('hidden');
-      }
-    }
+  const navbar_titles = {};
+  const create_navbar_titles = menu => {
+    menu.forEach(e => {
+        if (e.type === 'sub') {
+          create_navbar_titles(e.menu)
+        } else {
+          navbar_titles[e.href] = 'title' in e ? e.title : e.label;
+        }
+    })
   }
+  create_navbar_titles(menu);
 
-  const sub_menu_visible = (e) => {
-    console.log(e);
-    const ul = e.target.nextElementSibling;
-    if (ul.classList.contains('hidden')) {
-      document.querySelectorAll('.sub-menu').forEach((menu) => menu.classList.add('hidden'));
-      ul.classList.remove('hidden');
-    } else {
-      ul.classList.add('hidden');
-    }
-  }
 
 </script>
 
@@ -85,7 +104,7 @@
         </button>
     </div>
     <div class="py-3">
-        Sapper Template
+        {navbar_title}
     </div>
     <a class="text-3xl font-bold pr-4" href={"/"}>
          <img class="h-9" src="sapper.png" alt="logo">
@@ -102,19 +121,19 @@
             {#each menu as item}
                 {#if item.type === 'link'}
                     {#if $session.user_level >= item.level}
-                        <li><a href="{item.href}">{item.label}</a></li>
+                        <li on:click={e => update_navbar_title(e)}><a href="{item.href}">{item.label}</a></li>
                     {/if}
                 {/if}
                 {#if item.type === 'sub'}
                     <div class="relative">
                         {#if $session.user_level >= item.level}
-                            <li on:click|stopPropagation={(e) => {sub_menu_visible(e)}}>{item.label}</li>
+                            <li on:click|stopPropagation={(e) => sub_menu_visible(e)}>{item.label}</li>
                             <div class="hidden sub-menu">
                                 <ul class="{item.label} ml-2">
                                     {#each item.menu as item}
                                         {#if item.type === 'link'}
                                             {#if $session.user_level >= item.level}
-                                                <li><a href="{item.href}">{item.label}</a></li>
+                                                <li on:click={e => update_navbar_title(e)}><a href="{item.href}">{item.label}</a></li>
                                             {/if}
                                         {/if}
                                     {/each}

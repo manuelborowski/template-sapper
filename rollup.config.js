@@ -27,7 +27,8 @@ export default {
 		plugins: [
 			alias({
 				entries: [
-					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') }
+					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') },
+					{find: 'components', replacement: path.resolve(__dirname, 'src/components') },
 				]
 			}),
 			replace({
@@ -88,7 +89,8 @@ export default {
 		plugins: [
 			alias({
 				entries: [
-					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') }
+					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') },
+					{find: 'components', replacement: path.resolve(__dirname, 'src/components') },
 				]
 			}),
 			replace({
