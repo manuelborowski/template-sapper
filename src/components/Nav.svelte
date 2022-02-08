@@ -74,6 +74,7 @@
         {type: 'link', label: 'settings', level: level.user_access, href: '/user/settings'},
       ]
     },
+    {type: 'link', label: 'Datatables', level: level.guest_access, href: '/datatables', title: 'Datatable test'},
   ];
 
   const navbar_titles = {};

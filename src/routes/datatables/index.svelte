@@ -1,15 +1,15 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
-  import { load } from './data.js'
 
   let el // table element
   let table // table object (API)
 
   onMount(() => {
-    table = jQuery(el).DataTable()
-
-    load().then(rows => {
-      table.rows.add(rows).draw()
+    table = jQuery(el).DataTable({
+      ajax: '/admin/users/data',
+      serverSide: true,
+      processing: true,
+      lengthMenu: [5, 10, 100],
     })
   });
 

@@ -6,5 +6,6 @@
 // updated postcss to support @import
 // Navbar: update navbar title, depending on the page
 // added Users page
+// 0.6: elaborated on datatables, server side processing
 
-export const version = '&copy; 2022 MB version 0.5'
+export const version = '&copy; 2022 MB version 0.6'
