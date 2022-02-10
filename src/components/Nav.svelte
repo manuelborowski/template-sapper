@@ -1,14 +1,14 @@
 <script>
-  import {goto, stores} from '@sapper/app';
+  import {goto, stores } from '@sapper/app';
   import fetch from 'cross-fetch';
   import {level} from 'lib/user_access_levels'
 
   //BOROWSKI: use the stored user level to hide/display certain entries of the navigation menu.
   //user level 0 is 'not logged in yet', 1 is 'guest level authorization', ..., 4 is 'admin level authorization'
-  const {session} = stores();
+  const { page, session} = stores();
 
   export let segment;
-  let navbar_title;
+  let navbar_title = 'Template Sapper';
   let hamburger_open = false;
 
   const main_menu_visible = (force_close = false) => {
@@ -53,12 +53,6 @@
     }
   }
 
-  const update_navbar_title = e => {
-    console.log(e);
-    const pathname = e.target.pathname;
-    navbar_title = pathname in navbar_titles ? navbar_titles[pathname] : pathname;
-  }
-
   const menu = [
     {type: 'link', label: 'Home', level: level.guest_access, href: '/guest'},
     {
@@ -87,11 +81,14 @@
         }
     })
   }
+
   create_navbar_titles(menu);
 
-
+  page.subscribe(({ path, params, query }) => {
+    const pathname = process.browser ? path : "Template sapper";
+    navbar_title = pathname in navbar_titles ? navbar_titles[pathname] : pathname;
+  })
 </script>
-
 
 <!-- navbar -->
 <nav class="flex  place-content-between items-center px-5 bg-gray-900 text-white w-screen h-full ">
@@ -122,7 +119,7 @@
             {#each menu as item}
                 {#if item.type === 'link'}
                     {#if $session.user_level >= item.level}
-                        <li on:click={e => update_navbar_title(e)}><a href="{item.href}">{item.label}</a></li>
+                        <li><a href="{item.href}">{item.label}</a></li>
                     {/if}
                 {/if}
                 {#if item.type === 'sub'}
@@ -134,7 +131,7 @@
                                     {#each item.menu as item}
                                         {#if item.type === 'link'}
                                             {#if $session.user_level >= item.level}
-                                                <li on:click={e => update_navbar_title(e)}><a href="{item.href}">{item.label}</a></li>
+                                                <li><a href="{item.href}">{item.label}</a></li>
                                             {/if}
                                         {/if}
                                     {/each}
@@ -164,3 +161,4 @@
         @apply absolute ml-12 bg-green-700 p-1 pr-4 rounded-lg border-2 border-white top-2 w-max space-y-2
     }
 </style>
+

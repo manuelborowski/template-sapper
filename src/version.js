@@ -7,5 +7,6 @@
 // Navbar: update navbar title, depending on the page
 // added Users page
 // 0.6: elaborated on datatables, server side processing
+// 0.7: update in navbar_title so that it changes when the route is changed, not because of a click in the menu
 
-export const version = '&copy; 2022 MB version 0.6'
+export const version = '&copy; 2022 MB version 0.7'

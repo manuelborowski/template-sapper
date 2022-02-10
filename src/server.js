@@ -46,7 +46,7 @@ app.use(
   sapper.middleware({
     session: (req) => {
       //BOROWSKI: this is called when an access to the server is made.
-      console.log(`${req.session.user_id} is looking for access`, req.session.user_level);
+      // console.log(`${req.session.user_id} is looking for access`, req.session.user_level);
       return ({
         user_level: req.session.user_level
       })
