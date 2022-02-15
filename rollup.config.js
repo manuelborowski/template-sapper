@@ -10,7 +10,8 @@ import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import { preprocess } from './svelte.config';
 import alias from '@rollup/plugin-alias';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
@@ -35,7 +36,8 @@ export default {
 				preventAssignment: true,
 				values:{
 					'process.browser': true,
-					'process.env.NODE_ENV': JSON.stringify(mode)
+					'process.env.NODE_ENV': JSON.stringify(mode),
+          'process.env.LOCALE': JSON.stringify(process.env.LOCALE),
 				},
 			}),
 			//BOROWSKI: this is for a newer version of the rollup-plugin-svelte
@@ -98,8 +100,9 @@ export default {
 				preventAssignment: true,
 				values:{
 					'process.browser': false,
-					'process.env.NODE_ENV': JSON.stringify(mode)
-				},
+					'process.env.NODE_ENV': JSON.stringify(mode),
+          'process.env.LOCALE': JSON.stringify(process.env.LOCALE),
+        },
 			}),
 			//BOROWSKI: this is for a newer version of the rollup-plugin-svelte
 			svelte({
@@ -135,8 +138,9 @@ export default {
 				preventAssignment: true,
 				values:{
 					'process.browser': true,
-					'process.env.NODE_ENV': JSON.stringify(mode)
-				},
+					'process.env.NODE_ENV': JSON.stringify(mode),
+          'process.env.LOCALE': JSON.stringify(process.env.LOCALE),
+        },
 			}),
 			commonjs(),
 			!dev && terser()

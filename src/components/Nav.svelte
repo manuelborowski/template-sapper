@@ -1,4 +1,5 @@
 <script>
+  import { _ } from 'lib/polyglot';
   import {goto, stores } from '@sapper/app';
   import fetch from 'cross-fetch';
   import {level} from 'lib/user_access_levels'
@@ -54,21 +55,21 @@
   }
 
   const menu = [
-    {type: 'link', label: 'Home', level: level.guest_access, href: '/guest'},
+    {type: 'link', label: _.t('home'), level: level.guest_access, href: '/guest'},
     {
-      type: 'sub', label: 'Admin', level: level.admin_access, menu: [
-        {type: 'link', label: 'Admin', level: level.guest_access, href: '/admin'},
-        {type: 'link', label: 'Users', level: level.guest_access, href: '/admin/users', title: 'Users'},
-        {type: 'link', label: 'Settings', level: level.guest_access, href: '/admin/settings'},
+      type: 'sub', label: _.t('admin'), level: level.admin_access, menu: [
+        {type: 'link', label: _.t('home'), level: level.guest_access, href: '/admin'},
+        {type: 'link', label: _.t('users'), level: level.guest_access, href: '/admin/users', title: _.t('users')},
+        {type: 'link', label: _.t('settings'), level: level.guest_access, href: '/admin/settings'},
       ]
     },
     {
-      type: 'sub', label: 'User', level: level.user_access, menu: [
+      type: 'sub', label: _.t('user'), level: level.user_access, menu: [
         {type: 'link', label: 'U1', level: level.user_access, href: '/user'},
-        {type: 'link', label: 'settings', level: level.user_access, href: '/user/settings'},
+        {type: 'link', label: _.t('settings'), level: level.user_access, href: '/user/settings'},
       ]
     },
-    {type: 'link', label: 'Datatables', level: level.guest_access, href: '/datatables', title: 'Datatable test'},
+    {type: 'link', label: _.t('datatables'), level: level.guest_access, href: '/datatables', title: 'Datatable test'},
   ];
 
   const navbar_titles = {};
@@ -113,7 +114,7 @@
     <ul class="flex-col my-auto font-semibold space-y-1 text-white">
 
         {#if $session.user_level === level.no_access || segment === undefined }
-            <li><a href="/">Login</a></li>
+            <li><a href="/">{_.t('login')}</a></li>
         {:else}
 
             {#each menu as item}
@@ -141,7 +142,7 @@
                     </div>
                 {/if}
             {/each}
-            <li><a href={"#"} on:click={handleLogout}>Logout</a></li>
+            <li><a href={"#"} on:click={handleLogout}>{_.t('logout')}</a></li>
         {/if}
     </ul>
 </div>
