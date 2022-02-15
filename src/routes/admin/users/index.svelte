@@ -1,49 +1,14 @@
-<script>
-  import { onMount, onDestroy } from 'svelte'
-
-  let el // table element
-  let table // table object (API)
-
-  onMount(() => {
-    table = jQuery(el).DataTable({
-      ajax: '/admin/users/data',
-      serverSide: true,
-      processing: true,
-      lengthMenu: [5, 10, 100],
-    })
-  });
-
-  onDestroy(() => {
-    if (table) {
-      table.destroy();
+<script context="module">
+    export async function preload(page, session) {
+      const res = await this.fetch('/admin/users/config');
+      const config = await res.json();
+      return { config }
     }
-  });
 </script>
 
-<svelte:head>
+<script>
+  import Datatables from "components/Datatables.svelte";
+  export let config;
+</script>
 
-</svelte:head>
-
-<table bind:this={el} class="display" style="width:100%">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Age</th>
-        <th>Start date</th>
-        <th>Salary</th>
-    </tr>
-    </thead>
-    <tbody />
-    <tfoot>
-    <tr>
-        <th>Name</th>
-        <th>Position</th>
-        <th>Office</th>
-        <th>Age</th>
-        <th>Start date</th>
-        <th>Salary</th>
-    </tr>
-    </tfoot>
-</table>
+<Datatables {config} />

@@ -8,5 +8,6 @@
 // added Users page
 // 0.6: elaborated on datatables, server side processing
 // 0.7: update in navbar_title so that it changes when the route is changed, not because of a click in the menu
+// 0.8 implemented support for generic datatables in svelte and support for mongodb (pagination, sort, search)
 
-export const version = '&copy; 2022 MB version 0.7'
+export const version = '&copy; 2022 MB version 0.8'

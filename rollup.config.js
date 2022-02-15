@@ -91,6 +91,7 @@ export default {
 				entries: [
 					{find: 'lib', replacement: path.resolve(__dirname, 'src/lib') },
 					{find: 'components', replacement: path.resolve(__dirname, 'src/components') },
+					{find: 'model', replacement: path.resolve(__dirname, 'src/model') },
 				]
 			}),
 			replace({

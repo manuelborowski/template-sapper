@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
+import { is_empty } from "lib/misc";
+import mongoosePaginate from "mongoose-paginate-v2";
+
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -7,6 +10,8 @@ const UserSchema = new Schema({
   password: {type: String, required: true},
   level: {type: Number, required: true},
 });
+
+UserSchema.plugin(mongoosePaginate);
 
 export const User = mongoose.model('User', UserSchema);
 
@@ -40,3 +45,15 @@ export const init = async () => {
   const admin = await User.find({username: 'admin'});
   if (admin.length === 0) await add_user('admin', 'admin', 4);
 };
+
+export const get_users = async (sort = [], search = {}, paginate = {}) => {
+  const query = User.find(search);
+  if (sort.length) {
+    query.sort(sort);
+  }
+  if (is_empty(paginate)) {
+    paginate = {pagination: false};
+  }
+  const result = await User.paginate(query, paginate);
+  return result;
+}
