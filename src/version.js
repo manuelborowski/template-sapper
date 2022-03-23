@@ -11,5 +11,6 @@
 // 0.8 implemented support for generic datatables in svelte and support for mongodb (pagination, sort, search)
 // 0.9: introduced polyglot
 // 0.10: reworked navigationbar.  Supports click (smartphone, pc) and hover (pc)
+// 0.11: small bugfix
 
-export const version = '&copy; 2022 MB version 0.10'
+export const version = '&copy; 2022 MB version 0.11'

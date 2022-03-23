@@ -6,7 +6,7 @@
 
   onMount(() => {
     table = jQuery(el).DataTable({
-      ajax: '/admin/users/data',
+      ajax: '/datatables/data',
       serverSide: true,
       processing: true,
       lengthMenu: [5, 10, 100],
