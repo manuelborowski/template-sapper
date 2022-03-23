@@ -10,5 +10,6 @@
 // 0.7: update in navbar_title so that it changes when the route is changed, not because of a click in the menu
 // 0.8 implemented support for generic datatables in svelte and support for mongodb (pagination, sort, search)
 // 0.9: introduced polyglot
+// 0.10: reworked navigationbar.  Supports click (smartphone, pc) and hover (pc)
 
-export const version = '&copy; 2022 MB version 0.9'
+export const version = '&copy; 2022 MB version 0.10'
