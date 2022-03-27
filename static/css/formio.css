@@ -1,0 +1,15 @@
+.formio-component, .formio-form {
+    position: inherit;
+}
+
+.formio-component div {
+    position: inherit;
+}
+
+.btn.signature-pad-refresh {
+    position: inherit;
+}
+
+.alert {
+    position: inherit;
+}

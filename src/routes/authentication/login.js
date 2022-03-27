@@ -1,4 +1,4 @@
-import { validate_user } from '../model/User.js';
+import { validate_user } from 'model/User.js';
 import { level as access_level } from 'lib/user_access_levels';
 
 export async function post(req, res) {

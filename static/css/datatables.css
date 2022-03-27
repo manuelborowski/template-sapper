@@ -1,5 +1,6 @@
 /* Datatable specific settings */
 div .dataTables_wrapper, .dataTables_wrapper {
     @apply static;
+    position: inherit;
 }
 

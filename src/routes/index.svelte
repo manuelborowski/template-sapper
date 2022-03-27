@@ -10,7 +10,7 @@
 
   //BOROWSKI: Ask for email and password, send to server for validation and go to the home page.
   const handleLogin = async () => {
-    const response = await fetch("/login", {
+    const response = await fetch("/authentication/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

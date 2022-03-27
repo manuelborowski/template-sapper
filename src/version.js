@@ -12,5 +12,6 @@
 // 0.9: introduced polyglot
 // 0.10: reworked navigationbar.  Supports click (smartphone, pc) and hover (pc)
 // 0.11: small bugfix
+// 0.12: css updates.  Fixed datatables-route.  Updated router-layout
 
-export const version = '&copy; 2022 MB version 0.11'
+export const version = '&copy; 2022 MB version 0.12'

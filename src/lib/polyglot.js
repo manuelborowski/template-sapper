@@ -18,6 +18,7 @@ if (locale === 'en') {
     logout: 'Logout',
     password: 'Password',
     log_in: 'Log in',
+    formio: 'Form IO'
   })
 } else {
   _.extend({
@@ -33,5 +34,6 @@ if (locale === 'en') {
     logout: 'Afmelden',
     password: 'Wachtwoord',
     log_in: 'Aanmelden',
+    formio: 'Form IO'
   })
 }

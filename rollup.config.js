@@ -48,6 +48,13 @@ export default {
 				},
 				emitCss: true,
 				preprocess, // <-- add this
+        onwarn: (warning, handler) => { // avoid removing unused css selectors
+          const { code, frame } = warning;
+          if (code === "css-unused-selector")
+            return;
+
+          handler(warning);
+        },
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
@@ -113,6 +120,13 @@ export default {
 				},
 				emitCss: true,
 				preprocess, // <-- add this
+        onwarn: (warning, handler) => { // avoid removing unused css selectors
+          const { code, frame } = warning;
+          if (code === "css-unused-selector")
+            return;
+
+          handler(warning);
+        },
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),

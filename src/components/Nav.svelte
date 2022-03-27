@@ -33,7 +33,7 @@
 
 
   const handleLogout = async () => {
-    const response = await fetch("/logout", {
+    const response = await fetch("/authentication/logout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +75,7 @@
         {type: 'link', label: _.t('settings'), level: level.user_access, href: '/user/settings'},
       ]
     },
+    {type: 'link', label: _.t('formio'), level: level.guest_access, href: '/formio', title: 'Formio test'},
     {type: 'link', label: _.t('datatables'), level: level.guest_access, href: '/datatables', title: 'Datatable test'},
   ];
 
@@ -211,6 +212,10 @@
         left: 100%;
         width:100%;
         display: none;
+    }
+
+    li p {  /* correct bootstrap */
+        margin-bottom: 0;
     }
 </style>
 

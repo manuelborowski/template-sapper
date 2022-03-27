@@ -15,5 +15,5 @@
 </main>
 
 <footer class="bg-gray-300 p-8 box-border">
-	<h1>{@html version}</h1>
+	<p>{@html version}</p>
 </footer>
