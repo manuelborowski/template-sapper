@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
 import { is_empty } from "lib/misc";
+import mongoose from 'mongoose';
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const Schema = mongoose.Schema;
@@ -15,45 +15,57 @@ UserSchema.plugin(mongoosePaginate);
 
 export const User = mongoose.model('User', UserSchema);
 
-const add_user = async (username, password, level) => {
-  const hash = await bcrypt.hash(password, 10);
-  const user = new User({username, password: hash, level });
-  const new_user = await user.save();
-  if (new_user !== user) {
-    throw Error(`add_user: ${username} could not be saved`);
+const add = async (username, password, level) => {
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    const user = new User({username, password: hash, level});
+    const new_user = await user.save();
+    if (new_user !== user) {
+      throw Error(`user: add: ${username} could not be saved`);
+    }
+  } catch(e){
+    throw Error(`users: add: ${username}\n${e}`);
   }
 }
 
 export const validate_user = async (username, password) => {
-  const user = await User.findOne({username});
-  if (user) {
+  try {
+    const user = await User.findOne({username}).exec();
+    if (user === null) return undefined
     const pwd_is_ok = await bcrypt.compare(password, user.password);
-    if (pwd_is_ok) {
-      return {valid: true, user: {id: user.id, level: user.level} }
-    }
+    if (pwd_is_ok) return user
+  } catch (e) {
+    throw Error(`users: validate_user: ${username}\n${e}`);
   }
-  return {valid: false, user: 0 }
 }
 
 export const init = async () => {
-  const guest = await User.find({username: 'guest'});
-  if (guest.length === 0) await add_user('guest', 'guest', 1);
-  const user = await User.find({username: 'user'});
-  if (user.length === 0) await add_user('user', 'user', 2);
-  const supervisor = await User.find({username: 'supervisor'});
-  if (supervisor.length === 0) await add_user('supervisor', 'supervisor', 3);
-  const admin = await User.find({username: 'admin'});
-  if (admin.length === 0) await add_user('admin', 'admin', 4);
+  try {
+    const guest = await User.findOne({username: 'guest'}).exec();
+    if (guest === null) await add('guest', 'guest', 1);
+    const user = await User.findOne({username: 'user'}).exec();
+    if (user === null) await add('user', 'user', 2);
+    const supervisor = await User.findOne({username: 'supervisor'}).exec();
+    if (supervisor === null) await add('supervisor', 'supervisor', 3);
+    const admin = await User.findOne({username: 'admin'}).exec();
+    if (admin === null) await add('admin', 'admin', 4);
+  } catch (e) {
+    throw Error(`users: init:\n${e}`);
+  }
+
 };
 
 export const get_users = async (sort = [], search = {}, paginate = {}) => {
-  const query = User.find(search);
-  if (sort.length) {
-    query.sort(sort);
+  try {
+    const query = User.find(search);
+    if (sort.length) {
+      query.sort(sort);
+    }
+    if (is_empty(paginate)) {
+      paginate = {pagination: false};
+    }
+    return await User.paginate(query, paginate);
+  } catch(e) {
+    throw Error(`users get_users:\n${e}`);
   }
-  if (is_empty(paginate)) {
-    paginate = {pagination: false};
-  }
-  const result = await User.paginate(query, paginate);
-  return result;
 }

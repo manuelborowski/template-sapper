@@ -13,5 +13,6 @@
 // 0.10: reworked navigationbar.  Supports click (smartphone, pc) and hover (pc)
 // 0.11: small bugfix
 // 0.12: css updates.  Fixed datatables-route.  Updated router-layout
+// 0.13: use formio for settings.  Reworked datatables so to have less boilerplate.  Elaborate on try/catch for errorhandling
 
-export const version = '&copy; 2022 MB version 0.12'
+export const version = '&copy; 2022 MB version 0.13'

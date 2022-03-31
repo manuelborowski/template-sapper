@@ -7,10 +7,10 @@
   onMount(() => init());
   export const init = () => {
     table = jQuery(el).DataTable({
-      ajax: config.data_route,
+      ajax: config.data_endpoint,
       serverSide: true,
       processing: true,
-      lengthMenu: [2, 5, 10, 100],
+      lengthMenu: [5, 10, 100],
       columns: config.columns,
     })
   };

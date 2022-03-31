@@ -2,7 +2,6 @@
   import { onMount} from "svelte";
 
   onMount(() => {
-      Formio.icons = 'fontawesome';
       Formio.createForm(document.getElementById('formio'), 'https://examples.form.io/example');
   });
 

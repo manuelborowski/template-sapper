@@ -1,4 +1,4 @@
-import { validate_user } from 'model/User.js';
+import * as mduser from 'model/User.js';
 import { level as access_level } from 'lib/user_access_levels';
 
 export async function post(req, res) {
@@ -6,8 +6,8 @@ export async function post(req, res) {
     console.log('login via username/password')
     const { username, password } = req.body;
     //BOROWSKI: At this point, the database should be checked to see it the user is present and what its authorizationlevel is.
-    const { valid, user } = await validate_user(username, password);
-    if (valid) {
+    const user = await mduser.validate_user(username, password);
+    if (user !== undefined) {
       req.session.user_id = user.id;
       req.session.user_level = user.level;
     } else {

@@ -1,7 +1,7 @@
 <script context="module">
-    export async function preload(page, session) {
-      const res = await this.fetch('/admin/users/config');
-      const config = await res.json();
+    import {config_a} from './config.js';
+    export async function preload() {
+      const config = config_a;
       return { config }
     }
 </script>

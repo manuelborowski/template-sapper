@@ -7,7 +7,7 @@ import session from 'express-session';
 import sessionFileStore from 'session-file-store';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import {init as user_init} from './model/User.js';
+import * as mduser  from './model/User.js';
 import { url_path_to_level, level as access_level } from 'lib/user_access_levels';
 import  nocache  from 'nocache';
 
@@ -53,17 +53,20 @@ app.use(
     }
   }),
 )
+//allow empty ("") strings
+//https://github.com/Automattic/mongoose/issues/7150
+mongoose.Schema.Types.String.checkRequired(v => v != null);
 
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
-    return user_init();
+    mduser.init();
   })
   .then(() => {
     app.listen(PORT, err => {
       if (err) console.log('error', err);
     });
   })
-  .catch((err) => {
-    console.log('Error: ', err);
+  .catch((e) => {
+    console.log(`main:\n${e}`);
   })
 
