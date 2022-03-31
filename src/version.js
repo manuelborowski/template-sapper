@@ -14,5 +14,6 @@
 // 0.11: small bugfix
 // 0.12: css updates.  Fixed datatables-route.  Updated router-layout
 // 0.13: use formio for settings.  Reworked datatables so to have less boilerplate.  Elaborate on try/catch for errorhandling
+// 0.14: small update
 
-export const version = '&copy; 2022 MB version 0.13'
+export const version = '&copy; 2022 MB version 0.14'
