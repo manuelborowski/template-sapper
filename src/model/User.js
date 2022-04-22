@@ -1,7 +1,10 @@
 import bcrypt from 'bcrypt';
 import { is_empty } from "lib/misc";
-import mongoose from 'mongoose';
+import mongoose, {mongo} from 'mongoose';
 import mongoosePaginate from "mongoose-paginate-v2";
+
+const level2role = ['guest', 'user', 'supervisor', 'admin'];
+const role2level = {'guest': 1, 'user': 2, 'supervisor': 3, 'admin': 4};
 
 const Schema = mongoose.Schema;
 
@@ -14,6 +17,14 @@ const UserSchema = new Schema({
 UserSchema.plugin(mongoosePaginate);
 
 export const User = mongoose.model('User', UserSchema);
+
+mongoose.set('toJSON', {virtuals: true});
+mongoose.set('toObject', {virtuals: true});
+
+UserSchema.virtual('role').
+  get(function() {return level2role[this.level-1]}).
+  set(function(role) {this.level = role2level[role]});
+
 
 const add = async (username, password, level) => {
   try {

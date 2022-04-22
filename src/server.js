@@ -66,6 +66,7 @@ mongoose.connect(process.env.MONGODB_URL)
       if (err) console.log('error', err);
     });
   })
+
   .catch((e) => {
     console.log(`main:\n${e}`);
   })
